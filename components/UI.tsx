@@ -1,10 +1,10 @@
-
 import React from 'react';
+import logoSrc from '../Open9/logo_completo_sin_fondo.png';
 
 export const Logo: React.FC<{ className?: string; onClick?: () => void }> = ({ className = "h-10", onClick }) => (
   <button onClick={onClick} className="hover:opacity-90 transition-opacity flex items-center shrink-0">
     <img 
-      src="logo_completo_sin_fondo.png" 
+      src={logoSrc} 
       alt="Open9 Logo" 
       className={`${className} object-contain`} 
     />

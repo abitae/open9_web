@@ -2,7 +2,9 @@
 
 Landing y panel de administración para Open9, con backend en Go, persistencia en MySQL o MariaDB y autenticación JWT.
 
-**Guía paso a paso:** [INICIO.md](INICIO.md) — pasos detallados para poner en marcha el proyecto.
+**Guía paso a paso:** [INICIO.md](INICIO.md) — pasos detallados para poner en marcha el proyecto.  
+**Desplegar en AWS EC2:** [DEPLOY_EC2.md](DEPLOY_EC2.md) — subir el proyecto a una instancia EC2.  
+**Hosting compartido:** [DEPLOY_HOSTING_COMPARTIDO.md](DEPLOY_HOSTING_COMPARTIDO.md) — subir solo el frontend y conectar a tu API.
 
 ## Requisitos
 
