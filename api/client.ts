@@ -2,6 +2,11 @@ import type { Project, ClientLogo, ProjectInquiry, ContactMessage } from '../typ
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
+/** URL base del API (para mostrar en UI cuando falla la conexión). */
+export function getApiBaseUrl(): string {
+  return API_BASE;
+}
+
 const TOKEN_KEY = 'open9_token';
 
 function getToken(): string | null {

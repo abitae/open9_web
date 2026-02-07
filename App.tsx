@@ -174,12 +174,20 @@ export default function App() {
   return (
     <div className="min-h-screen selection:bg-cyan-200">
       {apiConnected === false && (
-        <div className="fixed top-0 left-0 right-0 z-[100] h-10 bg-amber-500/95 text-slate-900 px-4 text-center text-sm font-bold flex items-center justify-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
-          Sin conexión con el servidor. Algunas funciones pueden no estar disponibles.
+        <div className="fixed top-0 left-0 right-0 z-[100] min-h-10 bg-amber-500/95 text-slate-900 px-4 py-2 text-center text-sm font-bold flex flex-col items-center justify-center gap-0.5">
+          <span className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+            Sin conexión con el servidor.
+          </span>
+          <span className="font-mono text-xs font-normal break-all">
+            API: {api.getApiBaseUrl()}
+          </span>
+          <span className="text-xs font-normal opacity-90">
+            Prueba en el navegador: {api.getApiBaseUrl()}/api/projects — Abre el puerto en EC2 y revisa que el backend esté en marcha.
+          </span>
         </div>
       )}
-      <nav className={`fixed left-0 right-0 z-50 transition-all duration-500 ${apiConnected === false ? 'top-10' : 'top-0'} ${isScrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-xl shadow-xl py-3 border-b border-slate-100' : 'bg-transparent py-8'}`}>
+      <nav className={`fixed left-0 right-0 z-50 transition-all duration-500 ${apiConnected === false ? 'top-20' : 'top-0'} ${isScrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-xl shadow-xl py-3 border-b border-slate-100' : 'bg-transparent py-8'}`}>
         <div className="container mx-auto px-6 flex items-center justify-between">
           <Logo onClick={() => navigateTo('home')} />
           <div className="hidden lg:flex items-center gap-10">
@@ -216,7 +224,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className={`min-h-screen ${apiConnected === false ? 'pt-10' : ''}`}>
+      <main className={`min-h-screen ${apiConnected === false ? 'pt-20' : ''}`}>
         {loading ? (
           <div className="min-h-screen flex items-center justify-center text-slate-500 font-bold">Cargando...</div>
         ) : (
