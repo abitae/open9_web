@@ -20,6 +20,24 @@ export function isAuthenticated(): boolean {
   return !!getToken();
 }
 
+/** Verifica si el backend está alcanzable. Timeout 5s. */
+export async function checkApiConnection(): Promise<boolean> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const res = await fetch(`${API_BASE}/api/projects`, {
+      method: 'GET',
+      signal: controller.signal,
+      headers: { Accept: 'application/json' },
+    });
+    clearTimeout(timeout);
+    return res.ok;
+  } catch {
+    clearTimeout(timeout);
+    return false;
+  }
+}
+
 async function request<T>(
   path: string,
   options: RequestInit & { requireAuth?: boolean } = {}

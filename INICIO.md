@@ -88,7 +88,7 @@ En ese caso usarás en el backend: `open9:tu_contraseña@tcp(localhost:3306)/ope
          ```
      - **JWT_SECRET:** una cadena larga y aleatoria (en producción, que sea segura).
        - Ejemplo: `JWT_SECRET=mi-clave-secreta-jwt-2024`
-   - Opcionales: `ADMIN_DEFAULT_PASSWORD` (contraseña del admin al crearse), `PORT` (por defecto 8080).
+   - Opcionales: `ADMIN_DEFAULT_USER` (usuario admin, por defecto `abitae`), `ADMIN_DEFAULT_PASSWORD` (por defecto `lobomalo123`), `PORT` (puerto del servidor).
 
 5. **Descargar dependencias de Go y arrancar el servidor:**
    ```bash
@@ -98,7 +98,7 @@ En ese caso usarás en el backend: `open9:tu_contraseña@tcp(localhost:3306)/ope
 
 6. **Comprobar que el backend responde:**
    - Deberías ver en consola algo como: `Server running on :8080`
-   - En el primer arranque se crean las tablas y el usuario admin (usuario: `admin`, contraseña: la de `ADMIN_DEFAULT_PASSWORD` o `admin123` por defecto).
+   - En el primer arranque se crean las tablas y el usuario admin (usuario: `abitae`, contraseña: la de `ADMIN_DEFAULT_PASSWORD` o `lobomalo123` por defecto).
    - Deja esta terminal abierta mientras trabajas con el frontend.
 
 ---
@@ -140,8 +140,8 @@ En ese caso usarás en el backend: `open9:tu_contraseña@tcp(localhost:3306)/ope
 
 2. **Login admin:**
    - En la web, clic en **Admin** (o "Staff Access" en el pie).
-   - Usuario: **admin**
-   - Contraseña: la que pusiste en `ADMIN_DEFAULT_PASSWORD` o **admin123** por defecto.
+   - Usuario: **abitae**
+   - Contraseña: la que pusiste en `ADMIN_DEFAULT_PASSWORD` o **lobomalo123** por defecto.
    - Tras iniciar sesión deberías ver el panel (solicitudes, clientes, portafolio, mensajes).
 
 3. **Formularios:** prueba "Iniciar Proyecto" y el formulario de contacto; los datos deben guardarse en MySQL y verse en el panel admin.
@@ -164,7 +164,7 @@ npm install
 npm run dev
 ```
 
-Luego abre **http://localhost:3000** y entra al admin con **admin** / **admin123** (o la contraseña que hayas configurado).
+Luego abre **http://localhost:3000** y entra al admin con **abitae** / **lobomalo123** (o la contraseña que hayas configurado).
 
 ---
 

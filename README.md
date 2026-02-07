@@ -44,8 +44,8 @@ usuario:contraseña@tcp(localhost:3306)/open9?parseTime=true
 
 En el primer arranque se ejecutan las migraciones y se crea el usuario admin por defecto si no existe:
 
-- **Usuario:** `admin`
-- **Contraseña:** la definida en `ADMIN_DEFAULT_PASSWORD` (por defecto `admin123`)
+- **Usuario:** `abitae` (o `ADMIN_DEFAULT_USER`)
+- **Contraseña:** la definida en `ADMIN_DEFAULT_PASSWORD` (por defecto `lobomalo123`)
 
 Cambia la contraseña en producción.
 
@@ -53,7 +53,8 @@ Variables de entorno (ver [backend/.env.example](backend/.env.example)):
 
 - `DATABASE_URL` — DSN de conexión MySQL/MariaDB
 - `JWT_SECRET` — Clave para firmar los JWT
-- `ADMIN_DEFAULT_PASSWORD` — Contraseña del admin al hacer seed (opcional)
+- `ADMIN_DEFAULT_USER` — Usuario admin al hacer seed (opcional, por defecto `abitae`)
+- `ADMIN_DEFAULT_PASSWORD` — Contraseña del admin al hacer seed (opcional, por defecto `lobomalo123`)
 - `PORT` — Puerto del servidor (por defecto 8080)
 
 ### 3. Frontend (React + Vite)

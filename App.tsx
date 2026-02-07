@@ -17,6 +17,15 @@ export default function App() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [inquiries, setInquiries] = useState<ProjectInquiry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiConnected, setApiConnected] = useState<boolean | null>(null);
+
+  // Verificación de conexión con el API (al montar y cada 60s)
+  useEffect(() => {
+    const check = () => api.checkApiConnection().then(setApiConnected);
+    check();
+    const interval = setInterval(check, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -155,7 +164,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen selection:bg-cyan-200">
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-xl shadow-xl py-3 border-b border-slate-100' : 'bg-transparent py-8'}`}>
+      {apiConnected === false && (
+        <div className="fixed top-0 left-0 right-0 z-[100] h-10 bg-amber-500/95 text-slate-900 px-4 text-center text-sm font-bold flex items-center justify-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+          Sin conexión con el servidor. Algunas funciones pueden no estar disponibles.
+        </div>
+      )}
+      <nav className={`fixed left-0 right-0 z-50 transition-all duration-500 ${apiConnected === false ? 'top-10' : 'top-0'} ${isScrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-xl shadow-xl py-3 border-b border-slate-100' : 'bg-transparent py-8'}`}>
         <div className="container mx-auto px-6 flex items-center justify-between">
           <Logo onClick={() => navigateTo('home')} />
           <div className="hidden lg:flex items-center gap-10">
@@ -192,7 +207,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="min-h-screen">
+      <main className={`min-h-screen ${apiConnected === false ? 'pt-10' : ''}`}>
         {loading ? (
           <div className="min-h-screen flex items-center justify-center text-slate-500 font-bold">Cargando...</div>
         ) : (
@@ -299,8 +314,10 @@ export default function App() {
             </div>
             
             <div className="flex items-center gap-4">
-              <span className="h-1 w-1 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 mr-4">System Operational</span>
+              <span className={`h-1 w-1 rounded-full ${apiConnected === true ? 'bg-green-500 animate-pulse' : apiConnected === false ? 'bg-red-500' : 'bg-slate-500'}`} />
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 mr-4">
+                {apiConnected === true ? 'Conectado al servidor' : apiConnected === false ? 'Sin conexión al servidor' : 'Comprobando conexión...'}
+              </span>
               <button 
                 onClick={() => navigateTo('admin')} 
                 className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[#4fd1c5] border border-slate-800 px-4 py-2 rounded-lg transition-all hover:bg-slate-800/30"

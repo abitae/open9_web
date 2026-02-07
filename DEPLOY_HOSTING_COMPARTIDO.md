@@ -23,16 +23,18 @@ Anota esa URL; la usarás como `VITE_API_URL` al construir el frontend.
 
 ## 2. Construir el frontend en tu PC
 
-En la carpeta del proyecto, en tu máquina:
+El proyecto está configurado para hosting compartido: rutas de recursos relativas (`base: './'`) y build optimizada.
 
-1. Crea un `.env` con la URL de tu API (sin barra final):
+En la raíz del proyecto (donde está `package.json`):
+
+1. Crea un `.env` con la URL de tu API (sin barra final). Puedes copiar `.env.example` y editarlo:
 
 ```bash
-# En la raíz del proyecto (donde está package.json)
-echo VITE_API_URL=https://api.tudominio.com > .env
+# Copia el ejemplo y edita VITE_API_URL
+copy .env.example .env
+# Edita .env y pon la URL de tu backend, ej.:
+# VITE_API_URL=https://api.tudominio.com
 ```
-
-Sustituye `https://api.tudominio.com` por la URL real de tu backend.
 
 2. Instala dependencias y genera la build:
 
@@ -41,7 +43,13 @@ npm install
 npm run build
 ```
 
-Se crea la carpeta **`dist/`** con todo el sitio estático (HTML, JS, CSS, imágenes).
+O, para build pensada para subir al hosting:
+
+```bash
+npm run build:hosting
+```
+
+Se crea la carpeta **`dist/`** con todo el sitio estático (HTML, JS, CSS, imágenes). Los archivos usan rutas relativas (`./assets/...`) para que funcionen en cualquier carpeta del servidor.
 
 ---
 

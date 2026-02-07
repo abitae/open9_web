@@ -42,19 +42,23 @@ func main() {
 		log.Fatalf("seed check: %v", err)
 	}
 	if n == 0 {
+		defaultUser := os.Getenv("ADMIN_DEFAULT_USER")
+		if defaultUser == "" {
+			defaultUser = "abitae"
+		}
 		defaultPass := os.Getenv("ADMIN_DEFAULT_PASSWORD")
 		if defaultPass == "" {
-			defaultPass = "admin123"
+			defaultPass = "lobomalo123"
 		}
 		hash, err := auth.HashPassword(defaultPass)
 		if err != nil {
 			log.Fatalf("hash admin password: %v", err)
 		}
-		_, err = db.DB.Exec("INSERT INTO admin_user (username, password_hash) VALUES (?, ?)", "admin", hash)
+		_, err = db.DB.Exec("INSERT INTO admin_user (username, password_hash) VALUES (?, ?)", defaultUser, hash)
 		if err != nil {
 			log.Fatalf("seed admin: %v", err)
 		}
-		log.Println("seeded default admin user (username: admin)")
+		log.Printf("seeded default admin user (username: %s)", defaultUser)
 	}
 
 	mux := http.NewServeMux()

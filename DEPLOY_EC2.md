@@ -125,7 +125,8 @@ Contenido (ajusta contraseñas):
 ```env
 DATABASE_URL=open9:TU_PASSWORD_SEGURA@tcp(127.0.0.1:3306)/open9?parseTime=true
 JWT_SECRET=genera-una-clave-larga-y-aleatoria
-ADMIN_DEFAULT_PASSWORD=admin123
+ADMIN_DEFAULT_USER=abitae
+ADMIN_DEFAULT_PASSWORD=lobomalo123
 PORT=8080
 ```
 
@@ -238,7 +239,7 @@ sudo systemctl status open9-api
 ## 9. Probar el despliegue
 
 1. En el navegador: **http://TU_IP_PUBLICA** — debe cargar la landing.
-2. **Admin** → usuario `admin`, contraseña la de `ADMIN_DEFAULT_PASSWORD` (p. ej. `admin123`).
+2. **Admin** → usuario `abitae`, contraseña la de `ADMIN_DEFAULT_PASSWORD` (p. ej. `lobomalo123`).
 3. Si algo falla:
    - Backend: `sudo journalctl -u open9-api -f`
    - Nginx: `sudo tail -f /var/log/nginx/error.log`
