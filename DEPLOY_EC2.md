@@ -15,7 +15,7 @@ Pasos para subir el proyecto (frontend React + backend Go + MySQL/MariaDB) a una
    - **SSH (22)** — tu IP (o 0.0.0.0/0 solo para pruebas).
    - **HTTP (80)** — 0.0.0.0/0
    - **HTTPS (443)** — 0.0.0.0/0 (para SSL más adelante).
-   - *(No hace falta abrir 8080: Nginx hace proxy de `/api` al backend en 8080 internamente.)*
+   - **Custom TCP 8080** — 0.0.0.0/0 (solo si el frontend llama al API en `http://IP:8080`; si usas Nginx con `VITE_API_URL=http://IP` sin puerto, no hace falta).
 7. **Almacenamiento:** 8–20 GB.
 8. Lanzar y anotar la **IP pública** (o asignar Elastic IP).
 
@@ -262,13 +262,84 @@ sudo systemctl status open9-api
 
 ---
 
-## 11. (Opcional) Dominio y HTTPS
+## 11. Dominio y HTTPS (recomendado)
 
-1. Asigna un **dominio** (A record) a la IP de la EC2 (o Elastic IP).
-2. Instala Certbot y obtén certificado:
-   ```bash
-   sudo apt install -y certbot python3-certbot-nginx
-   sudo certbot --nginx -d tudominio.com -d www.tudominio.com
-   ```
-3. Vuelve a construir el frontend con `VITE_API_URL=https://tudominio.com` y `npm run build`.
-4. Recarga Nginx y actualiza `server_name` en el sitio a tu dominio.
+Sirves la app y el API por HTTPS desde el mismo dominio. Así evitas "Failed to fetch" por contenido mixto (página HTTPS llamando a API HTTP).
+
+**Requisito:** Un dominio con registro **A** apuntando a la IP de la EC2 (Elastic IP recomendada). Let's Encrypt no emite certificados para IPs.
+
+### 11.1 Certificado SSL con Let's Encrypt
+
+En la EC2 (Ubuntu/Debian):
+
+```bash
+sudo apt update
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d tudominio.com -d www.tudominio.com
+```
+
+Certbot modificará la configuración de Nginx para escuchar en 443 y redirigir HTTP → HTTPS. Responde al asistente (email, términos).
+
+### 11.2 Nginx con HTTPS
+
+Si prefieres configurar a mano, en `/etc/nginx/sites-available/open9`:
+
+```nginx
+server {
+    listen 80;
+    server_name tudominio.com www.tudominio.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name tudominio.com www.tudominio.com;
+
+    ssl_certificate /etc/letsencrypt/live/tudominio.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tudominio.com/privkey.pem;
+
+    root /home/ubuntu/open9_web/dist;
+    index index.html;
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+*(Ajusta `root` si usas `ec2-user`: `/home/ec2-user/open9_web/dist`. Las rutas de `ssl_certificate` las crea Certbot.)*
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 11.3 Frontend con API por HTTPS
+
+En tu máquina (o en la EC2 si construyes ahí):
+
+```bash
+cd open9_web
+echo 'VITE_API_URL=https://tudominio.com' > .env
+npm run build
+```
+
+Sube de nuevo la carpeta `dist/` a la EC2. Las peticiones irán a `https://tudominio.com/api/...` y Nginx las enviará al backend en 8080. **No hace falta abrir el puerto 8080** en el Security Group; solo 80 y 443.
+
+### 11.4 Resumen HTTPS
+
+| Paso | Acción |
+|------|--------|
+| DNS | A (y opcionalmente AAAA) de `tudominio.com` y `www` → IP de la EC2 |
+| Certificado | `sudo certbot --nginx -d tudominio.com -d www.tudominio.com` |
+| Nginx | Servir `dist/` y `location /api/` → `http://127.0.0.1:8080` |
+| Build | `VITE_API_URL=https://tudominio.com` y `npm run build` |
+| Security Group | Puertos 80 y 443 abiertos; 8080 puede quedarse cerrado al exterior |

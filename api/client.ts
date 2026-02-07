@@ -52,15 +52,19 @@ async function request<T>(
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
   const url = `${API_BASE}${path}`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
   let res: Response;
   try {
-    res = await fetch(url, { ...fetchOptions, headers });
+    res = await fetch(url, { ...fetchOptions, headers, signal: controller.signal });
   } catch (err) {
+    clearTimeout(timeoutId);
     const msg = err instanceof Error ? err.message : 'Error de red';
     throw new Error(
       `No se pudo conectar con el servidor (${msg}). Comprueba que el backend esté en marcha en ${API_BASE} y que no haya bloqueo por firewall o CORS.`
     );
   }
+  clearTimeout(timeoutId);
   if (res.status === 401) {
     clearToken();
     throw new Error('unauthorized');
