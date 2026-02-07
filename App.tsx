@@ -33,10 +33,13 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Initial load: public data + restore session
+  // Initial load: public data + restore session (con timeout para no quedarse en "Cargando..." si el API no responde)
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    const timeout = setTimeout(() => {
+      if (!cancelled) setLoading(false);
+    }, 10000);
     (async () => {
       try {
         const [projs, logos] = await Promise.all([api.getProjects(), api.getClientLogos()]);
@@ -63,9 +66,15 @@ export default function App() {
           setIsLogged(false);
         }
       }
-      if (!cancelled) setLoading(false);
+      if (!cancelled) {
+        clearTimeout(timeout);
+        setLoading(false);
+      }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, []);
 
   // Load admin data when entering admin view

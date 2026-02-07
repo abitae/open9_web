@@ -18,7 +18,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
-	var list []models.Project
+	list := []models.Project{}
 	for rows.Next() {
 		var p models.Project
 		var techJSON []byte
@@ -47,7 +47,7 @@ func GetClientLogos(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer rows.Close()
-	var list []models.ClientLogo
+	list := []models.ClientLogo{}
 	for rows.Next() {
 		var l models.ClientLogo
 		if err := rows.Scan(&l.ID, &l.Name, &l.URL); err != nil {

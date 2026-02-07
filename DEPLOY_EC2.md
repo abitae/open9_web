@@ -15,6 +15,7 @@ Pasos para subir el proyecto (frontend React + backend Go + MySQL/MariaDB) a una
    - **SSH (22)** — tu IP (o 0.0.0.0/0 solo para pruebas).
    - **HTTP (80)** — 0.0.0.0/0
    - **HTTPS (443)** — 0.0.0.0/0 (para SSL más adelante).
+   - **Custom TCP 8083** — 0.0.0.0/0 (API backend; necesario si el frontend llama a `http://IP:8083`).
 7. **Almacenamiento:** 8–20 GB.
 8. Lanzar y anotar la **IP pública** (o asignar Elastic IP).
 

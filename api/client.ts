@@ -51,7 +51,16 @@ async function request<T>(
     const token = getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
-  const res = await fetch(`${API_BASE}${path}`, { ...fetchOptions, headers });
+  const url = `${API_BASE}${path}`;
+  let res: Response;
+  try {
+    res = await fetch(url, { ...fetchOptions, headers });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error de red';
+    throw new Error(
+      `No se pudo conectar con el servidor (${msg}). Comprueba que el backend esté en marcha en ${API_BASE} y que no haya bloqueo por firewall o CORS.`
+    );
+  }
   if (res.status === 401) {
     clearToken();
     throw new Error('unauthorized');
