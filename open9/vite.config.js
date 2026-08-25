@@ -14,6 +14,9 @@ export default defineConfig({
                 'resources/js/passkeys.js',
             ],
             refresh: true,
+            // Document root: open9_web/ (no usar open9/public/)
+            publicDirectory: '../',
+            buildDirectory: 'build',
             fonts: [
                 bunny('Instrument Sans', {
                     weights: [400, 500, 600],

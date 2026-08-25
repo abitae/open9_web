@@ -28,8 +28,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-if ($publicPath = env('PUBLIC_PATH')) {
-    $app->usePublicPath($publicPath);
-}
+// Document root: carpeta padre de Laravel (open9_web/), no open9/public/
+$app->usePublicPath(dirname(dirname(__DIR__)));
 
 return $app;

@@ -1,66 +1,61 @@
-# OPEN9 — copia para BanaHosting
+# OPEN9 — entorno local (Windows)
 
-Raiz web del hosting (`/home/suohtvln/public_html`).
+La raiz web es **`open9_web/`**, no `open9/public/`. Laravel vive en `open9_web/open9/`.
 
 ## Estructura
 
 ```
-public_html/          document root
-  index.php           entrypoint PHP
-  .htaccess
-  index.html          SPA React
-  assets/
-  build/
-  open9/              Laravel (bloqueado por Apache)
-    .env              produccion
+open9_web/              document root (carpeta padre de open9/)
+  index.php             entrypoint PHP
+  index.html            SPA React
+  assets/               frontend compilado
+  build/                assets Vite del admin
+  storage/              enlace: php artisan storage:link
+  open9/                Laravel (sin carpeta public/ activa)
+    .env
     artisan
     vendor/
 ```
 
-## Primer despliegue (SSH en el servidor)
+## Arrancar en local
 
-```bash
-cd ~/public_html/open9
-nano .env                    # completar DB_PASSWORD
+```powershell
+cd D:\Project\Open9\open9_web\open9
+
 php artisan key:generate --force
+php artisan config:clear
 php artisan migrate --seed --force
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+php artisan storage:link
+php artisan serve
 ```
 
-Enlace para archivos subidos:
+Abre: http://127.0.0.1:8000
 
-```bash
-ln -sf /home/suohtvln/public_html/open9/storage/app/public /home/suohtvln/public_html/storage
-```
+`php artisan serve` sirve desde `open9_web/` (carpeta padre de `open9/`; no hace falta configurarlo).
 
-Cron (opcional):
-
-```bash
-/opt/cpanel/ea-php83/root/usr/bin/php /home/suohtvln/public_html/open9/artisan schedule:run >> /dev/null 2>&1
-```
-
-## Variables `.env` (open9/.env)
+## Variables `.env` (local)
 
 ```env
-PUBLIC_PATH=/home/suohtvln/public_html
-APP_URL=https://www.open9.dev
-FRONTEND_URL=https://www.open9.dev
-DB_DATABASE=suohtvln_open9
-DB_USERNAME=suohtvln_open9
-APP_ENV=production
-APP_DEBUG=false
+APP_URL=http://127.0.0.1:8000
+DB_USERNAME=root
+DB_DATABASE=open9
 ```
 
-## MySQL (cPanel)
+MercadoPago, Google OAuth y AWS se configuran en el **panel admin**; no hace falta ponerlas en `.env` para desarrollo local.
 
-- Base: `suohtvln_open9`
-- Usuario: `suohtvln_open9`
-- Host: `localhost`
+## Frontend admin (Vite)
 
-## Desarrollo en Windows
+```powershell
+cd open9
+npm run build
+```
 
-El codigo fuente se edita en `backend_open9/` (proyecto original).
-Esta carpeta `public_html/` solo se sube al hosting; copia aqui los cambios
-de `backend_open9/public/` y el resto del proyecto en `open9/` cuando actualices.
+Los assets del admin se generan en `open9_web/build/` (no en `open9/public/`).
+
+## SPA React
+
+Se desarrolla en `backend_open9/public/` y se copia a `open9_web/assets/` + `index.html`.
+
+## Proyecto fuente
+
+Codigo Laravel: `backend_open9/`. Sincroniza cambios a `open9_web/open9/` cuando pruebes el layout de hosting.

@@ -315,8 +315,8 @@ class SiteConfigService
                     ->all(),
                 'testimonials' => Testimonial::query()
                     ->where('status', RecordStatus::Active)
-                    ->orderByDesc('id')
-                    ->limit(6)
+                    ->orderBy('sort_order')
+                    ->limit(9)
                     ->get(['name', 'profession', 'company', 'content', 'rating', 'photo'])
                     ->map(fn (Testimonial $t): array => [
                         'quote' => $t->content,

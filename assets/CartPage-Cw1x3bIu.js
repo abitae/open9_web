@@ -119,7 +119,7 @@ export default function CartPage() {
                           className: "store-lead text-tech-muted",
                           children: count
                             ? "Revisa cantidades y continúa al pago con MercadoPago."
-                            : "Aún no hay productos. Explora el catálogo para armar tu infraestructura.",
+                            : "Aún no hay productos. Explora paquetes OPEN9, hardware y cloud para tu empresa.",
                         }),
                       ],
                     }),

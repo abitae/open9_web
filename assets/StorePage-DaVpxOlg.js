@@ -546,7 +546,7 @@ export default function StorePage() {
                         }),
                         h("p", {
                           className: "store-lead text-tech-muted",
-                          children: "Servidores, licencias, paquetes cloud y accesorios. Precios en dólares, con equivalente en soles.",
+                          children: "Paquetes de chatbots, auditorías, dashboards e integraciones. También hardware, cloud y licencias para tu infraestructura.",
                         }),
                       ],
                     }),

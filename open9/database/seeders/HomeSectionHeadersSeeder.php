@@ -72,7 +72,7 @@ class HomeSectionHeadersSeeder extends Seeder
                 'label' => 'Confianza',
                 'title' => 'Empresarios que confían en',
                 'title_highlight' => 'OPEN9',
-                'description' => null,
+                'description' => 'Dueños y gerentes peruanos que automatizaron leads, citas, pedidos y reportes con OPEN9.',
                 'sort_order' => 8,
             ],
             [

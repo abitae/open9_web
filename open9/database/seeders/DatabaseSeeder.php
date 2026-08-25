@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ProjectCategorySeeder::class,
             BlogCategorySeeder::class,
             ServiceCategorySeeder::class,
+            ClientSeeder::class,
             Open9DemoSeeder::class,
             SiteCmsSeeder::class,
             ProjectsCatalogSeeder::class,

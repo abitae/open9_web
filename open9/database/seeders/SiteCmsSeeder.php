@@ -10,6 +10,7 @@ use App\Models\HomeHeroPanelPill;
 use App\Models\HomeHeroPanelSetting;
 use App\Models\HomeHeroPanelStat;
 use App\Models\HomeHeroShowcaseCard;
+use App\Models\HomeHeroShowcaseSetting;
 use App\Models\HomePricingPlan;
 use App\Models\HomeQuickLink;
 use App\Models\HomeStat;
@@ -35,24 +36,25 @@ class SiteCmsSeeder extends Seeder
             'logo_path' => '/logo_normal.png',
             'logo_dark_path' => '/logo_black.png',
             'favicon_path' => '/favicon.png',
-            'hero_title' => 'Expertos en automatización',
-            'hero_subtitle' => 'Transformamos procesos manuales en soluciones inteligentes que impulsan tu negocio.',
+            'hero_title' => 'Expertos en automatización e IA',
+            'hero_subtitle' => 'Transformamos procesos manuales en soluciones inteligentes: ahorras tiempo, reduces costos y aumentas resultados.',
             'hero_cta_primary_label' => 'Hablemos de tu empresa',
             'hero_cta_primary_url' => '/contacto',
-            'hero_cta_secondary_label' => 'Ver servicios',
-            'hero_cta_secondary_url' => '/servicios',
+            'hero_cta_secondary_label' => 'Ver casos reales',
+            'hero_cta_secondary_url' => '/proyectos',
             'background_video_url' => 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260315_073750_51473149-4350-4920-ae24-c8214286f323.mp4',
             'contact_email' => 'empresario.ia@open9.dev',
-            'contact_phone' => '+51 999 000 000',
+            'contact_phone' => '+51 999 000 009',
+            'contact_address' => 'Lima, Perú · Atención remota en todo el país',
             'website_url' => 'https://www.open9.dev',
-            'footer_description' => 'Tecnología que impulsa tu crecimiento. Automatización, inteligencia artificial y software a medida para inmobiliarias, restaurantes, clínicas, comercios y estudios contables.',
-            'copyright_text' => '© 2026 OPEN9. Todos los derechos reservados.',
+            'footer_description' => 'OPEN9 diseña automatización, inteligencia artificial y software a medida para inmobiliarias, restaurantes, clínicas, comercios y estudios contables. Menos trabajo repetitivo, más resultados.',
+            'copyright_text' => '© 2026 OPEN9 · www.open9.dev · Todos los derechos reservados.',
             'seo_description' => 'OPEN9 — expertos en automatización e IA. Transformamos procesos manuales en soluciones inteligentes que ahorran tiempo, reducen costos y aumentan resultados.',
         ]);
 
         AiChatSetting::query()->updateOrCreate(['id' => 1], [
             'is_enabled' => true,
-            'fab_label' => 'Hablar con OPEN9',
+            'fab_label' => 'Asistente IA',
             'welcome_message' => 'Hola, soy el asistente de OPEN9. Pregúntame cómo automatizar tu inmobiliaria, restaurante, clínica, comercio o estudio contable.',
             'system_prompt' => 'Eres el asistente virtual de OPEN9, empresa peruana experta en automatización, inteligencia artificial, software a medida, dashboards, integraciones y chatbots. Responde siempre en español, de forma clara y profesional. Ayuda a empresarios a ahorrar tiempo, reducir costos y aumentar resultados. No prometas plazos ni precios exactos: invita a escribir a empresario.ia@open9.dev o a completar el formulario de contacto.',
             'model' => 'gemini-2.0-flash',
@@ -62,6 +64,7 @@ class SiteCmsSeeder extends Seeder
 
         $this->seedStats();
         $this->seedHeroPanel();
+        $this->seedHeroShowcaseSettings();
         $this->seedHeroShowcase();
         $this->seedFeatureCards();
         $this->seedWorkflow();
@@ -108,7 +111,7 @@ class SiteCmsSeeder extends Seeder
             'quote_secondary' => 'tu crecimiento.',
             'quote_footer' => 'www.open9.dev',
             'media_type' => 'image',
-            'image_path' => $this->referenceImage('automation', 960, 720),
+            'image_path' => $this->referenceImage('team-meeting', 960, 720),
         ]);
 
         $heroPanelStats = [
@@ -136,6 +139,13 @@ class SiteCmsSeeder extends Seeder
         }
     }
 
+    private function seedHeroShowcaseSettings(): void
+    {
+        HomeHeroShowcaseSetting::query()->updateOrCreate(['id' => 1], [
+            'badge_label' => 'Casos reales · Automatización · IA',
+        ]);
+    }
+
     private function seedHeroShowcase(): void
     {
         $heroCards = [
@@ -145,7 +155,7 @@ class SiteCmsSeeder extends Seeder
                 'description' => 'Eliminamos tareas repetitivas en ventas, operación y administración para que tu equipo se enfoque en crecer.',
                 'icon' => 'Workflow',
                 'media_type' => 'image',
-                'image_path' => $this->referenceImage('automation', 600, 400),
+                'image_path' => $this->referenceImage('chatbot-whatsapp', 600, 400),
                 'sort_order' => 1,
             ],
             [
@@ -163,7 +173,7 @@ class SiteCmsSeeder extends Seeder
                 'description' => 'Sistemas, paneles e integraciones pensados para inmobiliarias, restaurantes, clínicas, comercios y estudios contables.',
                 'icon' => 'Code2',
                 'media_type' => 'image',
-                'image_path' => $this->referenceImage('analytics', 800, 500),
+                'image_path' => $this->referenceImage('dashboard-kpi', 800, 500),
                 'sort_order' => 3,
             ],
         ];
@@ -295,22 +305,96 @@ class SiteCmsSeeder extends Seeder
 
     private function seedFooter(): void
     {
-        if (FooterLinkGroup::query()->count() === 0) {
-            $nav = FooterLinkGroup::query()->create(['title' => 'Navegación', 'sort_order' => 1]);
-            foreach ([['Inicio', '/'], ['Proyectos', '/proyectos'], ['Servicios', '/servicios'], ['Blog', '/blog'], ['Tienda', '/tienda']] as $i => [$label, $url]) {
-                FooterLink::query()->create(['footer_link_group_id' => $nav->id, 'label' => $label, 'url' => $url, 'sort_order' => $i + 1]);
+        $groups = [
+            [
+                'title' => 'Navegación',
+                'sort_order' => 1,
+                'links' => [
+                    ['Inicio', '/', false],
+                    ['Servicios', '/servicios', false],
+                    ['Proyectos', '/proyectos', false],
+                    ['Blog', '/blog', false],
+                    ['Tienda', '/tienda', false],
+                    ['Contacto', '/contacto', false],
+                ],
+            ],
+            [
+                'title' => 'Soluciones',
+                'sort_order' => 2,
+                'links' => [
+                    ['Automatización', '/servicios', false],
+                    ['Chatbots e IA', '/servicios', false],
+                    ['Dashboards', '/proyectos', false],
+                    ['Software a medida', '/contacto', false],
+                    ['Integraciones', '/servicios', false],
+                ],
+            ],
+            [
+                'title' => 'Empresa',
+                'sort_order' => 3,
+                'links' => [
+                    ['Casos reales', '/proyectos', false],
+                    ['Empresarios que confían', '/#testimonios', false],
+                    ['Hablemos', '/contacto', false],
+                    ['Mi cuenta', '/ingresar', false],
+                    ['empresario.ia@open9.dev', 'mailto:empresario.ia@open9.dev', true],
+                ],
+            ],
+            [
+                'title' => 'Legal',
+                'sort_order' => 4,
+                'links' => [
+                    ['Privacidad', '/legal/privacidad', false],
+                    ['Términos', '/legal/terminos', false],
+                    ['Cookies', '/legal/cookies', false],
+                ],
+            ],
+        ];
+
+        $keepTitles = [];
+        foreach ($groups as $groupData) {
+            $keepTitles[] = $groupData['title'];
+            $group = FooterLinkGroup::query()->updateOrCreate(
+                ['title' => $groupData['title']],
+                ['sort_order' => $groupData['sort_order'], 'is_visible' => true],
+            );
+
+            $keepLabels = [];
+            foreach ($groupData['links'] as $index => [$label, $url, $external]) {
+                $keepLabels[] = $label;
+                FooterLink::query()->updateOrCreate(
+                    ['footer_link_group_id' => $group->id, 'label' => $label],
+                    ['url' => $url, 'sort_order' => $index + 1, 'is_external' => $external],
+                );
             }
-            $legal = FooterLinkGroup::query()->create(['title' => 'Legal', 'sort_order' => 2]);
-            foreach ([['Privacidad', '/legal/privacidad'], ['Términos', '/legal/terminos'], ['Cookies', '/legal/cookies']] as $i => [$label, $url]) {
-                FooterLink::query()->create(['footer_link_group_id' => $legal->id, 'label' => $label, 'url' => $url, 'sort_order' => $i + 1]);
-            }
+
+            FooterLink::query()
+                ->where('footer_link_group_id', $group->id)
+                ->whereNotIn('label', $keepLabels)
+                ->delete();
         }
 
-        if (SocialLink::query()->count() === 0) {
-            SocialLink::query()->create(['platform' => 'linkedin', 'url' => 'https://linkedin.com', 'sort_order' => 1]);
-            SocialLink::query()->create(['platform' => 'twitter', 'url' => 'https://twitter.com', 'sort_order' => 2]);
-            SocialLink::query()->create(['platform' => 'instagram', 'url' => 'https://instagram.com', 'sort_order' => 3]);
+        FooterLinkGroup::query()
+            ->whereNotIn('title', $keepTitles)
+            ->update(['is_visible' => false]);
+
+        $social = [
+            ['platform' => 'linkedin', 'url' => 'https://www.linkedin.com/company/open9', 'sort_order' => 1],
+            ['platform' => 'instagram', 'url' => 'https://www.instagram.com/open9.dev', 'sort_order' => 2],
+            ['platform' => 'youtube', 'url' => 'https://www.youtube.com/@open9dev', 'sort_order' => 3],
+            ['platform' => 'facebook', 'url' => 'https://www.facebook.com/open9.dev', 'sort_order' => 4],
+        ];
+
+        foreach ($social as $link) {
+            SocialLink::query()->updateOrCreate(
+                ['platform' => $link['platform']],
+                $link + ['is_visible' => true],
+            );
         }
+
+        SocialLink::query()
+            ->whereNotIn('platform', collect($social)->pluck('platform'))
+            ->update(['is_visible' => false]);
     }
 
     private function seedLegalPages(): void
