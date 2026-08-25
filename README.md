@@ -52,9 +52,12 @@ npm run build
 
 Los assets del admin se generan en `open9_web/build/` (no en `open9/public/`).
 
-## SPA React
+## SPA React (sitio público)
 
-Se desarrolla en `backend_open9/public/` y se copia a `open9_web/assets/` + `index.html`.
+Los estilos y componentes viven en el build de React (`assets/`).  
+`index.html` solo es el entry point — **no editar CSS ahí**; los cambios van en React y se regeneran con el build.
+
+Copia el build a `open9_web/assets/` + `open9_web/index.html` al desplegar.
 
 ## Proyecto fuente
 
